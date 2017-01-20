@@ -1,0 +1,15 @@
+from scrapy.spiders import Spider
+from jobscrape.items import JobscrapeItem
+from scrapy.http    import Request
+
+class MySpider(Spider):
+  name            = "jobscrape"
+  allowed_domains = ["indeed.co.uk"]
+  start_urls      = ["https://www.indeed.co.uk/Data-Scientist-jobs"]
+
+  def parse(self, response):
+    titles = response.xpath('//a[contains(@class, "row result")]/a/text()').extract()
+    for title in titles:
+      item = JobscrapeItem()
+      item["title"] = title
+      yield item
